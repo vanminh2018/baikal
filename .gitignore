@@ -108,9 +108,6 @@ config/
 ehthumbs.db
 Thumbs.db
 
-# Docker
-.dockerignore
-
 # Baïkal specific
 config/baikal.yaml
 !config/baikal.yaml.example
