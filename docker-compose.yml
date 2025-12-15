@@ -1,0 +1,30 @@
+services:
+  # Service 1: Baïkal Core (Phục vụ Linphone)
+  baikal:
+    image: ckulka/baikal:nginx
+    container_name: baikal
+    restart: on-failure
+    ports:
+      - "${BAIKAL_PORT}:80"
+    environment:
+      - BA_WEBDAV_AUTH_TYPE=${BAIKAL_AUTH_TYPE}
+    volumes:
+      - ./config:/var/www/baikal/config
+      - ./Specific:/var/www/baikal/Specific
+
+  # Service 2: API Node.js (Tạo User tự động)
+  baikal-api:
+    build: ./baikal-api
+    container_name: baikal-api
+    restart: on-failure
+    ports:
+      - "${API_PORT}:3000"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - API_SECRET=${API_SECRET}
+      - BAIKAL_REALM=${BAIKAL_REALM}
+      - BAIKAL_PUBLIC_URL=${BAIKAL_PUBLIC_URL}
