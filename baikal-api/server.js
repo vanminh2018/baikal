@@ -7,7 +7,7 @@ app.use(express.json()); // Cho phép nhận JSON body
 
 const API_SECRET = process.env.API_SECRET;
 
-const REALM = process.env.BAIKAL_REALM;
+const REALM = process.env.BAIKAL_REALM || 'BaikalDAV';
 
 const PUBLIC_URL = (process.env.BAIKAL_PUBLIC_URL).replace(/\/$/, '');
 
@@ -33,6 +33,11 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,
 });
+
+// Helper: Validate Username (Chỉ cho phép chữ thường, số, gạch dưới, gạch ngang)
+function isValidUsername(username) {
+    return /^[a-z0-9_-]+$/.test(username);
+}
 
 // Logic tạo Tenant
 async function createBaikalTenant(username, password, displayName, email = null) {
@@ -76,6 +81,12 @@ app.post('/api/create-tenant', async (req, res) => {
 
     if (!username || !password || !displayName) {
         return res.status(400).json({ error: 'Thiếu thông tin username, password hoặc displayName' });
+    }
+
+    if (!isValidUsername(username)) {
+        return res.status(400).json({
+            error: 'Username invalid. Only lowercase letters, numbers, _ and - allowed.'
+        });
     }
 
     try {
