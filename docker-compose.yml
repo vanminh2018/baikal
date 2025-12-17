@@ -6,8 +6,6 @@ services:
     restart: on-failure
     ports:
       - "${BAIKAL_PORT}:80"
-    environment:
-      - BA_WEBDAV_AUTH_TYPE=${BAIKAL_AUTH_TYPE}
     volumes:
       - ./config:/var/www/baikal/config
       - ./Specific:/var/www/baikal/Specific
