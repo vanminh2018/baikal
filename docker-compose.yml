@@ -3,7 +3,7 @@ services:
   baikal:
     image: ckulka/baikal:nginx
     container_name: baikal
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - "${BAIKAL_PORT}:80"
     volumes:
@@ -14,7 +14,7 @@ services:
   baikal-api:
     build: ./baikal-api
     container_name: baikal-api
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - "${API_PORT}:3000"
     environment:
